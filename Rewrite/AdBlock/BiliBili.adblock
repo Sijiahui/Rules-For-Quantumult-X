@@ -40,13 +40,11 @@ hostname = -broadcast.chat.bilibili.com, -cm.bilibili.com, -*cdn*.biliapi.net, -
 
 # ======= BiliJson 开屏及隐私 ======= #
 # > BiliBili_哔哩哔哩_开屏广告 / 首页入口 / 搜索广场
-^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/(splash\/(brand\/list|event\/list2|list|show)|feed\/index(\/story)?|search\/square) url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.AdBlock.response.min.js
+^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/(splash\/(brand\/list|event\/list2|list|show)|search\/square) url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.AdBlock.response.min.js
 
-
-# ======= BiliJson 首页推荐双栏化[自用修改] ======= #
-# > 去除首页推荐顶部大卡片 / large_cover / banner / 广告卡片，让推荐流尽量保持双栏
-^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/feed\/index url script-response-body https://raw.githubusercontent.com/Sijiahui/Rules-For-Quantumult-X/main/Scripts/AdBlock/BiliBili/BiliBili.feed.twocol.js
-
+# ======= BiliJson 首页推荐双栏化[自用优化版] ======= #
+# > 去除首页推荐顶部大卡片 / 轮播图卡片 / banner / large_cover，让首页尽量保持双栏
+^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/feed\/index(\?.*)?$ url script-response-body https://raw.githubusercontent.com/Sijiahui/Rules-For-Quantumult-X/main/Scripts/AdBlock/BiliBili/BiliBili.feed.twocol.js
 
 # ======= BiliJson 高码率仅粉色旧版[V7.65] ======= #
 # > BiliBili_哔哩哔哩_1080P高码率+4K画质[番剧和影视除外]
