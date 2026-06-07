@@ -52,123 +52,72 @@ function cleanHomeFeedIndex(obj) {
 
     function isAdItem(item) {
         if (!item || typeof item !== "object") return true;
+        if (item.ad_info || item.ad || item.cm || item.creative_id || item.creative_type) return true;
 
-        if (item.hasOwnProperty("ad_info")) return true;
-        if (item.hasOwnProperty("ad")) return true;
-        if (item.hasOwnProperty("cm")) return true;
-        if (item.hasOwnProperty("creative_id")) return true;
-        if (item.hasOwnProperty("creative_type")) return true;
-
-        const cardGoto = lower(item.card_goto);
-        const gotoValue = lower(item.goto);
         const text = itemText(item);
-
-        if (cardGoto.includes("ad")) return true;
-        if (gotoValue.includes("ad")) return true;
-
-        const adKeys = [
-            "advertisement",
-            "sponsor",
-            "sponsored",
-            "creative",
-            "campaign",
-            "shopping",
-            "mall",
-            "game_center"
-        ];
-
-        return adKeys.some(k => text.includes(k));
+        return (
+            text.includes("advertisement") ||
+            text.includes("sponsor") ||
+            text.includes("sponsored") ||
+            text.includes("creative") ||
+            text.includes("campaign") ||
+            text.includes("shopping") ||
+            text.includes("mall") ||
+            text.includes("game_center")
+        );
     }
 
-    function isTopLargeCard(item, index) {
+    function isTopLargeCard(item) {
         if (!item || typeof item !== "object") return true;
 
-        const cardType = lower(item.card_type);
-        const cardGoto = lower(item.card_goto);
-        const gotoValue = lower(item.goto);
         const text = itemText(item);
 
-        const largeKeys = [
-            "large_cover",
-            "large_cover_v1",
-            "large_cover_v2",
-            "large_cover_v3",
-            "large_cover_v4",
-            "large_cover_v5",
-            "large_cover_single",
-            "large_cover_single_v9",
-            "large_cover_inline",
-            "large_cover_autoplay",
-            "large_cover_ugc",
-            "large_cover_ogv",
-            "banner",
-            "carousel",
-            "inline",
-            "autoplay",
-            "player",
-            "activity",
-            "special"
-        ];
-
-        if (largeKeys.some(k => cardType.includes(k))) return true;
-        if (largeKeys.some(k => cardGoto.includes(k))) return true;
-        if (largeKeys.some(k => gotoValue.includes(k))) return true;
-        if (largeKeys.some(k => text.includes(k))) return true;
-
-        // 截图中的首页顶部大卡片通常出现在前几项；
-        // 如果前 2 项不是标准双栏小卡片，也删除。
-        if (index <= 1) {
-            const isSmallCover = cardType.includes("small_cover") && !cardType.includes("large");
-            const isAvVideo = ["av", "video"].includes(cardGoto) || ["av", "video"].includes(gotoValue);
-
-            if (!isSmallCover && !isAvVideo) return true;
-        }
-
-        return false;
+        return (
+            text.includes("large_cover") ||
+            text.includes("large_cover_v1") ||
+            text.includes("large_cover_v2") ||
+            text.includes("large_cover_v3") ||
+            text.includes("large_cover_v4") ||
+            text.includes("large_cover_v5") ||
+            text.includes("large_cover_single") ||
+            text.includes("large_cover_single_v9") ||
+            text.includes("large_cover_inline") ||
+            text.includes("large_cover_autoplay") ||
+            text.includes("banner") ||
+            text.includes("carousel") ||
+            text.includes("autoplay") ||
+            text.includes("inline_player") ||
+            text.includes("activity")
+        );
     }
 
-    function shouldKeepItem(item, index) {
+    function isSmallVideo(item) {
         if (!item || typeof item !== "object") return false;
-
-        if (isAdItem(item)) return false;
-        if (isTopLargeCard(item, index)) return false;
 
         const cardType = lower(item.card_type);
         const cardGoto = lower(item.card_goto);
         const gotoValue = lower(item.goto);
 
-        // 保留普通双栏视频卡片
         if (cardType.includes("small_cover") && !cardType.includes("large")) return true;
-
-        // 兼容部分版本 card_type 不稳定，但 card_goto/goto 是 av/video 的情况
-        if (["av", "video"].includes(cardGoto)) return true;
-        if (["av", "video"].includes(gotoValue)) return true;
-
-        // 保留墨鱼原脚本允许的部分卡片，但排除大卡片
-        const allowTypes = [
-            "small_cover_v2"
-        ];
-
-        if (allowTypes.includes(cardType)) return true;
+        if (cardGoto === "av" || cardGoto === "video") return true;
+        if (gotoValue === "av" || gotoValue === "video") return true;
 
         return false;
     }
 
     const originalItems = obj.data.items;
-    let cleanedItems = originalItems.filter((item, index) => shouldKeepItem(item, index));
+    let cleanedItems = originalItems.filter((item) => {
+        if (isAdItem(item)) return false;
+        if (isTopLargeCard(item)) return false;
+        if (isSmallVideo(item)) return true;
+        return false;
+    });
 
-    // 保护逻辑：如果误删太多，退回到更保守策略，只删除广告、banner、large_cover
-    if (originalItems.length >= 6 && cleanedItems.length < Math.floor(originalItems.length * 0.5)) {
-        cleanedItems = originalItems.filter((item, index) => {
+    // 防止误删过多导致首页报错或空白
+    if (originalItems.length >= 6 && cleanedItems.length < Math.floor(originalItems.length * 0.4)) {
+        cleanedItems = originalItems.filter((item) => {
             if (isAdItem(item)) return false;
-
-            const text = itemText(item);
-            if (text.includes("large_cover")) return false;
-            if (text.includes("banner")) return false;
-            if (text.includes("carousel")) return false;
-            if (index <= 1 && text.includes("autoplay")) return false;
-            if (index <= 1 && text.includes("inline") && text.includes("player")) return false;
-
+            if (isTopLargeCard(item)) return false;
             return true;
         });
     }
