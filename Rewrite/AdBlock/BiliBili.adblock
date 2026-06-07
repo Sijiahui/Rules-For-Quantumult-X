@@ -34,6 +34,12 @@ hostname = -broadcast.chat.bilibili.com, -cm.bilibili.com, -*cdn*.biliapi.net, -
 ^https?:\/\/api\.bili(api|bili)\.(net|com)\/pgc\/season\/app\/related\/recommend\? url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.min.js
 # > BiliBili_哔哩哔哩_点击追番Card@ddgksf2013
 ^https?:\/\/api\.bilibili\.com\/pgc\/season\/player\/ogv\/cards url reject-dict
+# ======= BiliJson 播放页轮播卡片处理[自用实验] ======= #
+# > 播放页相关推荐/轮播卡片，可能会影响播放页推荐内容
+^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/view\/related url reject-dict
+^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/view\/relate url reject-dict
+# > 番剧/影视播放页小卡片，原规则已有，可保留
+^https:\/\/api\.bilibili\.com\/pgc\/season\/player\/cards url reject-dict
 
 # ======= BiliJson 直播间处理 ======= #
 # > BiliBili_哔哩哔哩_屏蔽直播间商品广告浮窗[还有一个域名]@ddgksf2013
