@@ -1,131 +1,6 @@
-const version = 'V2.0.122-custom-home-feed';
+const version = 'V2.0.122';
 
 let body = $response.body;
-
-function cleanHomeFeedIndex(obj) {
-    if (!obj || typeof obj !== "object") return obj;
-    if (!Array.isArray(obj?.data?.items)) return obj;
-
-    function lower(value) {
-        if (value === null || value === undefined) return "";
-        if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
-            return String(value).toLowerCase();
-        }
-        try {
-            return JSON.stringify(value).toLowerCase();
-        } catch (_) {
-            return "";
-        }
-    }
-
-    function itemText(item) {
-        if (!item || typeof item !== "object") return "";
-
-        const fields = [
-            "card_type",
-            "card_goto",
-            "goto",
-            "type",
-            "title",
-            "uri",
-            "param",
-            "track_id",
-            "style",
-            "from_type",
-            "source"
-        ];
-
-        let arr = [];
-
-        for (const key of fields) {
-            if (item[key] !== undefined) arr.push(lower(item[key]));
-        }
-
-        if (item.args) arr.push(lower(item.args));
-        if (item.ad_info) arr.push(lower(item.ad_info));
-        if (item.banner_item) arr.push(lower(item.banner_item));
-        if (item.banner) arr.push(lower(item.banner));
-        if (item.rcmd_reason_style) arr.push(lower(item.rcmd_reason_style));
-
-        return arr.join(" ");
-    }
-
-    function isAdItem(item) {
-        if (!item || typeof item !== "object") return true;
-        if (item.ad_info || item.ad || item.cm || item.creative_id || item.creative_type) return true;
-
-        const text = itemText(item);
-        return (
-            text.includes("advertisement") ||
-            text.includes("sponsor") ||
-            text.includes("sponsored") ||
-            text.includes("creative") ||
-            text.includes("campaign") ||
-            text.includes("shopping") ||
-            text.includes("mall") ||
-            text.includes("game_center")
-        );
-    }
-
-    function isTopLargeCard(item) {
-        if (!item || typeof item !== "object") return true;
-
-        const text = itemText(item);
-
-        return (
-            text.includes("large_cover") ||
-            text.includes("large_cover_v1") ||
-            text.includes("large_cover_v2") ||
-            text.includes("large_cover_v3") ||
-            text.includes("large_cover_v4") ||
-            text.includes("large_cover_v5") ||
-            text.includes("large_cover_single") ||
-            text.includes("large_cover_single_v9") ||
-            text.includes("large_cover_inline") ||
-            text.includes("large_cover_autoplay") ||
-            text.includes("banner") ||
-            text.includes("carousel") ||
-            text.includes("autoplay") ||
-            text.includes("inline_player") ||
-            text.includes("activity")
-        );
-    }
-
-    function isSmallVideo(item) {
-        if (!item || typeof item !== "object") return false;
-
-        const cardType = lower(item.card_type);
-        const cardGoto = lower(item.card_goto);
-        const gotoValue = lower(item.goto);
-
-        if (cardType.includes("small_cover") && !cardType.includes("large")) return true;
-        if (cardGoto === "av" || cardGoto === "video") return true;
-        if (gotoValue === "av" || gotoValue === "video") return true;
-
-        return false;
-    }
-
-    const originalItems = obj.data.items;
-    let cleanedItems = originalItems.filter((item) => {
-        if (isAdItem(item)) return false;
-        if (isTopLargeCard(item)) return false;
-        if (isSmallVideo(item)) return true;
-        return false;
-    });
-
-    // 防止误删过多导致首页报错或空白
-    if (originalItems.length >= 6 && cleanedItems.length < Math.floor(originalItems.length * 0.4)) {
-        cleanedItems = originalItems.filter((item) => {
-            if (isAdItem(item)) return false;
-            if (isTopLargeCard(item)) return false;
-            return true;
-        });
-    }
-
-    obj.data.items = cleanedItems;
-    return obj;
-}
-
 if (body) {
     switch (!0) {
         case /pgc\/season\/app\/related\/recommend\?/.test($request.url):
@@ -136,7 +11,6 @@ if (body) {
                 console.log(`bilibili recommend:` + a)
             }
             break;
-
         case /^https?:\/\/app\.bilibili\.com\/x\/resource\/show\/skin\?/.test($request.url):
             try {
                 let a = JSON.parse(body);
@@ -145,20 +19,16 @@ if (body) {
                 console.log(`bilibili skin:` + a)
             }
             break;
-
-        case /^https?:\/\/app\.bilibili\.com\/x\/v2\/feed\/index\?/.test($request.url):
-        case /^https?:\/\/app\.biliapi\.net\/x\/v2\/feed\/index\?/.test($request.url):
+        case /^https:\/\/app\.bilibili\.com\/x\/v2\/feed\/index\?/.test($request.url):
             try {
-                let a = JSON.parse(body);
-                a = cleanHomeFeedIndex(a);
-                body = JSON.stringify(a);
+                let a = JSON.parse(body), b = [];
+                for (let c of a.data.items) if (c.hasOwnProperty("banner_item")) continue; else if (!c.hasOwnProperty("ad_info") && -1 === c.card_goto?.indexOf("ad") && ["small_cover_v2", "large_cover_v1", "large_cover_single_v9"].includes(c.card_type)) b.push(c); else continue;
+                a.data.items = b, body = JSON.stringify(a)
             } catch (a) {
                 console.log(`bilibili index:` + a)
             }
             break;
-
         case /^https?:\/\/app\.bilibili\.com\/x\/v2\/feed\/index\/story\?/.test($request.url):
-        case /^https?:\/\/app\.biliapi\.net\/x\/v2\/feed\/index\/story\?/.test($request.url):
             try {
                 let a = JSON.parse(body), b = [];
                 for (let c of a.data.items) c.hasOwnProperty("ad_info") || -1 !== c.card_goto.indexOf("ad") || b.push(c);
@@ -167,7 +37,6 @@ if (body) {
                 console.log(`bilibili Story:` + a)
             }
             break;
-
         case /^https?:\/\/app\.bilibili\.com\/x\/v\d\/account\/teenagers\/status\?/.test($request.url):
             try {
                 let a = JSON.parse(body);
@@ -176,7 +45,6 @@ if (body) {
                 console.log(`bilibili teenagers:` + a)
             }
             break;
-
         case /^https?:\/\/app\.bilibili\.com\/x\/resource\/show\/tab/.test($request.url):
             try {
                 const a = new Set([177, 178, 179, 181, 102, 104, 106, 486, 488, 489]);
@@ -238,7 +106,6 @@ if (body) {
                 console.log(`bilibili tabprocess:` + a)
             }
             break;
-
         case /^https?:\/\/app\.bilibili\.com\/x\/v2\/account\/mine/.test($request.url):
             try {
                 let a = JSON.parse(body);
@@ -251,7 +118,6 @@ if (body) {
                 console.log(`bilibili mypage:` + a)
             }
             break;
-
         case /^https?:\/\/api\.live\.bilibili\.com\/xlive\/app-room\/v1\/index\/getInfoByRoom/.test($request.url):
             try {
                 let a = JSON.parse(body);
@@ -260,7 +126,6 @@ if (body) {
                 console.log(`bilibili live broadcast:` + a)
             }
             break;
-
         case /^https?:\/\/app\.bilibili\.com\/x\/resource\/top\/activity/.test($request.url):
             try {
                 let a = JSON.parse(body);
@@ -269,7 +134,6 @@ if (body) {
                 console.log(`bilibili right corner:` + a)
             }
             break;
-
         case /ecommerce-user\/get_shopping_info\?/.test($request.url):
             try {
                 let a = JSON.parse(body);
@@ -284,7 +148,6 @@ if (body) {
                 console.log(`bilibili shopping info:` + a)
             }
             break;
-
         case /^https?:\/\/app\.bilibili\.com\/x\/v2\/search\/square/.test($request.url):
             try {
                 let a = JSON.parse(body);
@@ -297,7 +160,6 @@ if (body) {
                 console.log(`bilibili hot search:` + a)
             }
             break;
-
         case /https?:\/\/app\.bilibili\.com\/x\/v2\/account\/myinfo\?/.test($request.url):
             try {
                 let a = JSON.parse(body);
@@ -306,7 +168,6 @@ if (body) {
                 console.log(`bilibili 1080p:` + a)
             }
             break;
-
         case /pgc\/page\/(bangumi|cinema\/tab\?)/.test($request.url):
             try {
                 let a = JSON.parse(body);
@@ -317,7 +178,6 @@ if (body) {
                 console.log(`bilibili fanju:` + a)
             }
             break;
-
         case /^https:\/\/app\.bilibili\.com\/x\/v2\/splash\/list/.test($request.url):
             try {
                 let a = JSON.parse(body);
@@ -327,7 +187,6 @@ if (body) {
                 console.log(`bilibili openad:` + a)
             }
             break;
-
         case /^https:\/\/api\.live\.bilibili\.com\/xlive\/app-interface\/v2\/index\/feed/.test($request.url):
             try {
                 let a = JSON.parse(body);
@@ -336,12 +195,8 @@ if (body) {
                 console.log(`bilibili xlive:` + a)
             }
             break;
-
         default:
             $done({});
     }
-
-    $done({ body })
-} else {
-    $done({});
-}
+    $done({body})
+} else $done({});
