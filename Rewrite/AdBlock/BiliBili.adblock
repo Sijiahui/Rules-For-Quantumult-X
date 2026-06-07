@@ -42,9 +42,8 @@ hostname = -broadcast.chat.bilibili.com, -cm.bilibili.com, -*cdn*.biliapi.net, -
 ^https?:\/\/api\.live\.bilibili\.com\/xlive\/app-room\/v1\/index\/getInfoByRoom url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.min.js
 
 # ======= BiliJson 开屏及隐私 ======= #
-# > 开屏广告 / 搜索广场；注意：这里不要再处理 feed/index
-# iOS 8.96.0 命中 /x/v2/splash/list 后可能导致“页面加载失败”，先停用开屏脚本便于测试首页规则。
-;^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/(splash\/(brand\/list|event\/list2|list|show)|search\/square) url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.AdBlock.response.min.js
+^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/(splash\/(brand\/list|event\/list2|list|show)|feed\/index(\/story)?|search\/square) url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.AdBlock.response.min.js
+^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/(splash\/(brand\/list|event\/list2|list|show)|feed\/index(\/story)?|search\/square) url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.AdBlock.response.min.js
 
 # ======= BiliJson 高码率仅粉色旧版[V7.65] ======= #
 # > BiliBili_哔哩哔哩_1080P高码率+4K画质[番剧和影视除外]@ddgksf2013
@@ -74,8 +73,8 @@ hostname = -broadcast.chat.bilibili.com, -cm.bilibili.com, -*cdn*.biliapi.net, -
 ^https?:\/\/api\.live\.bilibili\.com\/xlive\/app-interface\/v2\/index\/feed url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.min.js
 # > BiliBili_哔哩哔哩_漫画去广告@ddgksf2013
 ^https?:\/\/manga\.bilibili\.com\/twirp\/comic\.v\d\.Comic\/(Flash|ListFlash|GetActivityTab) url reject-dict
-# > BiliBili_哔哩哔哩_推荐去广告 + 首页顶部大卡片处理[自用优化]
-^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/feed\/index(\?.*)?$ url script-response-body https://raw.githubusercontent.com/Sijiahui/Rules-For-Quantumult-X/main/Scripts/AdBlock/BiliBili/BiliBili.js
+# > BiliBili_哔哩哔哩_推荐去广告@ddgksf2013
+^https?:\/\/app\.bilibili\.com\/x\/v2\/feed\/index url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.min.js
 # > BiliBili_哔哩哔哩_追番去广告@ddgksf2013
 ^https?:\/\/api\.(bilibili|biliapi)\.(com|net)\/pgc\/page\/bangumi url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.min.js
 # > BiliBili_哔哩哔哩_观影页面去广告@ddgksf2013
@@ -100,22 +99,22 @@ hostname = -broadcast.chat.bilibili.com, -cm.bilibili.com, -*cdn*.biliapi.net, -
 # ～ BiliBili_哔哩哔哩_屏蔽DefaultWord@ddgksf2013
 ^https?:\/\/(app\.bilibili\.com|grpc\.biliapi\.net)\/bilibili\.app\.interface\.v1\.Search\/Default url reject
 # ～ BiliBili_哔哩哔哩_搜索去广告@BiliUniverse
-;^https?:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.polymer\.app\.search\.v1\.Search\/SearchAll$ url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.protobuf.min.js
+^https?:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.polymer\.app\.search\.v1\.Search\/SearchAll$ url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.protobuf.min.js
 # ～ BiliBili_哔哩哔哩_交互点赞投票弹幕及会员弹幕@BiliUniverse
-;^https:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.community\.service\.dm\.v1\.DM\/(DmView|DmSegMobile) url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.protobuf.min.js
+^https:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.community\.service\.dm\.v1\.DM\/(DmView|DmSegMobile) url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.protobuf.min.js
 # ～ BiliBili_哔哩哔哩_青少年弹窗@BiliUniverse
-;^https:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.app\.interface\.v1\.Teenagers\/ModeStatus url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.protobuf.min.js
+^https:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.app\.interface\.v1\.Teenagers\/ModeStatus url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.protobuf.min.js
 # ～ BiliBili_哔哩哔哩_UP主推荐广告[适配ipad端]@BiliUniverse
-;^https?:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.app\.(view|viewunite)\.v1\.View\/(View|TFInfo|RelatesFeed)$ url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.protobuf.min.js
+^https?:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.app\.(view|viewunite)\.v1\.View\/(View|TFInfo|RelatesFeed)$ url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.protobuf.min.js
 # ～ BiliBili_哔哩哔哩_动态综合页及视频页去广告@BiliUniverse
-;^https?:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.app\.dynamic\.v2\.Dynamic\/Dyn(All|Video)$ url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.protobuf.min.js
+^https?:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.app\.dynamic\.v2\.Dynamic\/Dyn(All|Video)$ url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.protobuf.min.js
 # ～ BiliBili_哔哩哔哩_观看记录去广告@BiliUniverse
-;^https?:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.app\.playurl\.v1\.PlayURL\/PlayView$ url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.protobuf.min.js
+^https?:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.app\.playurl\.v1\.PlayURL\/PlayView$ url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.protobuf.min.js
 # ～ BiliBili_哔哩哔哩_回复去广告@BiliUniverse
-;^https:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.main\.community\.reply\.v1\.Reply\/MainList url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.protobuf.min.js
+^https:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.main\.community\.reply\.v1\.Reply\/MainList url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.protobuf.min.js
 
 # ======= BiliNotAdded ======= #
 # > BiliBili_哔哩哔哩_繁体CC字幕转中文简体[自行启用hostname=aisubtitle.hdslb.com,i0.hdslb.com]@ddgksf2013
 ;^https?:\/\/.*\.hdslb\.com\/bfs\/subtitle\/.+\.json url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.min.js
-# > BiliBili_哔哩哔哩_去除统一设置的皮肤[注释留存]@ddgksf2013
+# > BiliBili_哔哩哔哩_去除统一设置的皮肤[注释留存]
 ;^https?:\/\/app\.bilibili\.com\/x\/resource\/show\/skin\? url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.min.js
