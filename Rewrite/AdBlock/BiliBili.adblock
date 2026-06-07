@@ -43,7 +43,8 @@ hostname = -broadcast.chat.bilibili.com, -cm.bilibili.com, -*cdn*.biliapi.net, -
 
 # ======= BiliJson 开屏及隐私 ======= #
 # > 开屏广告 / 搜索广场；注意：这里不要再处理 feed/index
-^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/(splash\/(brand\/list|event\/list2|list|show)|search\/square) url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.AdBlock.response.min.js
+# iOS 8.96.0 命中 /x/v2/splash/list 后可能导致“页面加载失败”，先停用开屏脚本便于测试首页规则。
+;^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/(splash\/(brand\/list|event\/list2|list|show)|search\/square) url script-response-body https://r.sveir.xyz/Scripts/AdBlock/BiliBili/BiliBili.AdBlock.response.min.js
 
 # ======= BiliJson 高码率仅粉色旧版[V7.65] ======= #
 # > BiliBili_哔哩哔哩_1080P高码率+4K画质[番剧和影视除外]@ddgksf2013
