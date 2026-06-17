@@ -19,24 +19,25 @@ hostname = app.bilibili.com
 ^https?:\/\/app\.bilibili\.com\/x\/v2\/splash\/show url reject-200
 
 # 开屏广告列表
-^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/splash\/list url script-response-body https://raw.githubusercontent.com/ddgksf2013/Scripts/dd607d8c27bb694ced7651853e25cbfd4a410244/bilibili_json.js
+^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/splash\/list url script-response-body https://raw.githubusercontent.com/Sijiahui/Rules-For-Quantumult-X/main/Scripts/AdBlock/BiliBili/BiliBili.lite.js
 
 # 首页推荐流广告
-^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/feed\/index url script-response-body https://raw.githubusercontent.com/ddgksf2013/Scripts/dd607d8c27bb694ced7651853e25cbfd4a410244/bilibili_json.js
+^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/feed\/index url script-response-body https://raw.githubusercontent.com/Sijiahui/Rules-For-Quantumult-X/main/Scripts/AdBlock/BiliBili/BiliBili.lite.js
 
 # 首页 Story / 竖屏流，部分版本会走这个
-^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/feed\/index\/story url script-response-body https://raw.githubusercontent.com/ddgksf2013/Scripts/dd607d8c27bb694ced7651853e25cbfd4a410244/bilibili_json.js
+^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/feed\/index\/story url script-response-body https://raw.githubusercontent.com/Sijiahui/Rules-For-Quantumult-X/main/Scripts/AdBlock/BiliBili/BiliBili.lite.js
 
 # 首页右上角活动入口
-^https?:\/\/app\.bilibili\.com\/x\/resource\/top\/activity url script-response-body https://raw.githubusercontent.com/ddgksf2013/Scripts/dd607d8c27bb694ced7651853e25cbfd4a410244/bilibili_json.js
+^https?:\/\/app\.bilibili\.com\/x\/resource\/top\/activity url script-response-body https://raw.githubusercontent.com/Sijiahui/Rules-For-Quantumult-X/main/Scripts/AdBlock/BiliBili/BiliBili.lite.js
 
 # 首页顶部 Tab / 入口净化
-^https?:\/\/app\.bilibili\.com\/x\/resource\/show\/tab url script-response-body https://raw.githubusercontent.com/ddgksf2013/Scripts/dd607d8c27bb694ced7651853e25cbfd4a410244/bilibili_json.js
+^https?:\/\/app\.bilibili\.com\/x\/resource\/show\/tab url script-response-body https://raw.githubusercontent.com/Sijiahui/Rules-For-Quantumult-X/main/Scripts/AdBlock/BiliBili/BiliBili.lite.js
 
 # 搜索框默认词/热词，轻量 reject，不走脚本
 ^https?:\/\/app\.bilibili\.com\/x\/v\d\/search\/defaultwords url reject-dict
 ^https?:\/\/app\.bilibili\.com\/x\/v2\/search\/square url reject-dict
 ^https?:\/\/(app\.bilibili\.com|grpc\.biliapi\.net)\/bilibili\.app\.interface\.v1\.Search\/Default url reject-200
 
-^https?:\/\/app\.bilibili\.com\/x\/v2\/account\/myinfo\?
-^https?:\/\/app\.bilibili\.com\/x\/v2\/account\/mine
+# 以下接口不配置改写动作，避免影响账号页和评论区相关链路
+;^https?:\/\/app\.bilibili\.com\/x\/v2\/account\/myinfo\?
+;^https?:\/\/app\.bilibili\.com\/x\/v2\/account\/mine
