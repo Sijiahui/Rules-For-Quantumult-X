@@ -37,3 +37,6 @@ hostname = app.bilibili.com
 ^https?:\/\/app\.bilibili\.com\/x\/v\d\/search\/defaultwords url reject-dict
 ^https?:\/\/app\.bilibili\.com\/x\/v2\/search\/square url reject-dict
 ^https?:\/\/(app\.bilibili\.com|grpc\.biliapi\.net)\/bilibili\.app\.interface\.v1\.Search\/Default url reject-200
+
+^https?:\/\/app\.bilibili\.com\/x\/v2\/account\/myinfo\?
+^https?:\/\/app\.bilibili\.com\/x\/v2\/account\/mine
