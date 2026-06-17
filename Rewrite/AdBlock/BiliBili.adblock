@@ -15,4 +15,12 @@
 
 hostname = app.bilibili.com
 
+
+# 开屏广告
 ^https?:\/\/app\.bilibili\.com\/x\/v2\/splash\/show url reject-200
+
+# 开屏广告列表
+^https:\/\/app\.bilibili\.com\/x\/v2\/splash\/list url script-response-body https://raw.githubusercontent.com/ddgksf2013/Scripts/dd607d8c27bb694ced7651853e25cbfd4a410244/bilibili_json.js
+
+# 首页推荐流广告
+^https?:\/\/app\.bilibili\.com\/x\/v2\/feed\/index url script-response-body https://raw.githubusercontent.com/ddgksf2013/Scripts/dd607d8c27bb694ced7651853e25cbfd4a410244/bilibili_json.js
